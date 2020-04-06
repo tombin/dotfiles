@@ -1,0 +1,116 @@
+"{{{Plugins
+call plug#begin('~/.config/nvim/plugins')
+"{{{Side Window Plugins
+Plug 'scrooloose/nerdtree'                  " file browser
+Plug 'majutsushi/tagbar'                    " show ctags
+"}}}
+"{{{Visual Plugins
+Plug 'vim-airline/vim-airline'              " status bar
+Plug 'vim-airline/vim-airline-themes'       " themes for status bar
+Plug 'lilydjwg/colorizer'                   " hex colors
+Plug 'romainl/apprentice'                   " color theme
+"}}}
+"{{{Utility Plugins
+Plug 'terryma/vim-multiple-cursors'         " sublime-like multiple cursor
+Plug 'tomtom/tlib_vim'                      " needed for multi cursor
+Plug 'MarcWeber/vim-addon-mw-utils'         " needed for multi cursor
+Plug 'garbas/vim-snipmate'                  " snippet functionality
+Plug 'honza/vim-snippets'                   " provides snippets files
+Plug 'tpope/vim-scriptease'                 " debugging plugins
+Plug 'Yggdroot/indentLine'                  " show alignment on indented lines
+Plug 'preservim/nerdcommenter'              " line comments
+Plug 'edkolev/tmuxline.vim'                 " match tmux to airline theme
+"}}}
+"{{{Code Plugins
+Plug 'dense-analysis/ale'                   " async lint engine
+Plug 'vim-syntastic/syntastic'              " syntax checking
+Plug 'davidhalter/jedi-vim'                 " autocomplete for python
+Plug 'hashivim/vim-terraform'               " terraform integration
+"}}}
+call plug#end()
+"}}}
+"{{{Set Commands
+syntax on
+filetype indent plugin on
+set shell=/bin/bash
+set nocompatible                            " don't use old vi mode, its 2020
+set foldmethod=marker                       " use markers to identify folds
+set backspace=indent,eol,start              " sane backspace
+set encoding=utf-8                          " match encoding
+set expandtab                               " convert tabs to spaces
+set number                                  " line numbers
+set relativenumber                          " make counting lines easy
+set colorcolumn=80                          " visually show where column 80 is
+set shortmess+=I                            " don't show vim intro message
+set shiftwidth=4                            " how many spaces to indent
+set tabstop=4                               " how many spaces is a tab
+set background=dark                         " dark background for themes
+set termguicolors                           " true colors
+set cursorline                              " highlight entire line
+set mouse=a                                 " enable mouse support
+set noshowmode                              " show active mode in status bar
+set wildmenu                                " command completion 
+set showcmd                                 " show commands being typed
+set undofile                                " persistent undo / redo
+set undodir=~/.config/nvim/undo//           " where to store undo files
+if !isdirectory(expand(&undodir))           " make undo dir
+    call mkdir(expand(&undodir), "p")
+endif
+set tags=./tags,tags                        " where to look for tags file
+"}}}
+"{{{Keymaps
+"{{{F# Keymaps
+noremap <F5> :bp<CR>                        " previous buffer
+noremap <F6> :bn<CR>                        " next buffer
+noremap <F7> :NERDTreeToggle<CR>            " open/close file explorer
+"}}}
+"{{{Leader Keymaps
+vnoremap  <leader>y  "*y                    " copy to system clipboard
+nnoremap  <leader>b :TagbarToggle<CR>       " open/close tagbar
+"nnoremap  <leader>c :bd<CR>                 " close buffer
+"}}}
+"{{{Control Keymaps
+"}}}
+"}}}
+"{{{NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"}}}
+"{{{Purify
+let g:purify_bold = 0        " default: 1
+let g:purify_italic = 0      " default: 1
+let g:purify_underline = 1   " default: 1
+let g:purify_undercurl = 0   " default: 1
+let g:purify_inverse = 0     " default: 1
+autocmd colorscheme purify highlight CursorLine cterm=NONE ctermbg=235 ctermfg=NONE gui=NONE guibg=gray13 guifg=NONE
+"}}}
+"{{{Visual Configuration
+colorscheme apprentice
+"}}}
+"{{{Vim-Airline
+let g:airline_theme="apprentice"
+let g:airline#extensions#bufferline#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#tmuxline#enabled = 1
+let g:airline#extensions#tagbar#enabled  = 1
+"}}}
+"{{{Chef
+au FileType ruby set filetype=ruby.chef
+"}}}
+"{{{Ale
+let g:ale_linters = {
+    \ 'python': ['flake8', 'pylint'],
+    \ 'c': ['ccls'],
+    \ 'cpp': ['ccls'],
+    \ 'go': ['gometalinter', 'gofmt'],
+    \ 'ruby': ['rubocop', 'brakeman'],
+    \}
+let g:ale_echo_msg_format = '[%linter% - %severity%] %s'
+let g:ale_set_highlights = 1
+highlight ALEError ctermbg=none ctermfg=red cterm=underline gui=underline guifg=red guibg=none
+"}}}
+"{{{Indent Line
+let g:indentLine_char = "│"
+"}}}
